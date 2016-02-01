@@ -21,17 +21,16 @@ def sigint(signal, frame):
     terminate = True
 
 class UserInterface:
-    HEADER=1
-    TITLE=3
-    ALBUM=4
-    ARTIST=5
-    STATUS=7
-    FEEDBACK=8
-    ERRORS=9
+    HEADER=0
+    TITLE=2
+    ALBUM=3
+    ARTIST=4
+    STATUS=6
+    FEEDBACK=7
+    ERRORS=8
 
     def __init__(self, wnd):
         self.wnd = wnd
-        wnd.border(0)
         wnd.timeout(0)
 
     def poll(self):
@@ -55,7 +54,9 @@ class UserInterface:
     def put(self, line, info):
         my, mx = self.wnd.getmaxyx()
         strlen = len(info)
-        self.wnd.addstr(line, 1, info.encode('utf-8') + ' '*(mx-strlen-2))
+        pad = mx - strlen - 2
+        padl = pad / 2
+        self.wnd.addstr(line, 0, ' '*padl + info.encode('utf-8') + ' '*(pad - padl))
 
 class YandexRadio:
     def __init__(self, tag, ui):
