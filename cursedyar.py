@@ -28,10 +28,12 @@ class UserInterface:
     STATUS=6
     FEEDBACK=7
     ERRORS=8
+    HELP=10
 
     def __init__(self, wnd):
         self.wnd = wnd
         wnd.timeout(0)
+        self.put(UserInterface.HELP, 'q,Esc,^C: quit, n,s,Enter: skip, l:like, d:dislike and skip')
 
     def poll(self):
         return self.wnd.getch()
