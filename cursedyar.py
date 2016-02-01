@@ -33,12 +33,11 @@ class UserInterface:
     def __init__(self, wnd):
         self.wnd = wnd
         wnd.timeout(0)
-        self.put(UserInterface.HELP, 'q,Esc,^C: quit, n,s,Enter: skip, l:like, d:dislike and skip')
 
     def poll(self):
         return self.wnd.getch()
     def refresh(self):
-        pass
+        self.put(UserInterface.HELP, 'q,Esc,^C: quit, n,s,Enter: skip, l:like, d:dislike and skip')
     def header(self, info):
         self.put(UserInterface.HEADER, 'Now playing: ' + info)
     def title(self, info):
@@ -56,7 +55,7 @@ class UserInterface:
     def put(self, line, info):
         my, mx = self.wnd.getmaxyx()
         strlen = len(info)
-        pad = mx - strlen - 2
+        pad = mx - strlen
         padl = pad / 2
         self.wnd.addstr(line, 0, ' '*padl + info.encode('utf-8') + ' '*(pad - padl))
 
