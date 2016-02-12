@@ -37,7 +37,7 @@ class UserInterface:
     def poll(self):
         return self.wnd.getch()
     def refresh(self):
-        self.put(UserInterface.HELP, 'q,Esc,^C: quit, n,s,Enter: skip, l:like, d:dislike and skip')
+        self.put(UserInterface.HELP, 'q,Esc,^C: quit, n,s,Enter,Space: skip, l:like, d:dislike and skip')
     def header(self, info):
         self.put(UserInterface.HEADER, 'Now playing: ' + info)
     def title(self, info):
@@ -47,10 +47,16 @@ class UserInterface:
     def artist(self, info):
         self.put(UserInterface.ARTIST, 'Artist: ' + info)
     def status(self, info):
+        with open('status.log', 'a') as f:
+            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.STATUS, 'Status: ' + info)
     def feedback(self, info):
+        with open('feedback.log', 'a') as f:
+            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.FEEDBACK, 'Feedback status: ' + info)
     def error(self, info):
+        with open('error.log', 'a') as f:
+            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.ERRORS, 'Error: ' + info)
     def put(self, line, info):
         my, mx = self.wnd.getmaxyx()
@@ -190,7 +196,7 @@ class Player:
             if key == ord('d'):
                 reason = 'dislike'
                 break
-            if key == ord('\n') or key == ord('n') or key == ord('s'):
+            if key in [ord('\n'), ord('n'), ord('s'), ord(' ')]:
                 reason = 'skip'
                 break
             if key == ord('l'):
