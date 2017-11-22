@@ -61,7 +61,7 @@ class Player:
             if key == ord('l'):
                 evTime = time.time()
                 dur = evTime - startTime
-                yar.feedback('like', dur, *track)
+                yar.feedback('like', dur, *track, batch)
 
             if msg == None:
                 continue
