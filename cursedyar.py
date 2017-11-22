@@ -3,19 +3,12 @@
 from __future__ import absolute_import
 
 import sys
-import signal
 import curses
 import locale
 
 from ui import UserInterface
 from client import YandexRadio
 from player import Player
-
-terminate = False
-
-def sigint(signal, frame):
-    global terminate
-    terminate = True
 
 def main(wnd):
     global terminate
@@ -26,16 +19,21 @@ def main(wnd):
     ui = UserInterface(wnd)
     yar = YandexRadio(tag, ui)
     pl = Player()
-    signal.signal(signal.SIGINT, sigint)
 
     lastplayed = None
-    while not terminate:
-        queue = yar.gettracks(lastplayed)
+    queue = []
+    while not pl.terminate:
+        if len(queue) == 0:
+            queue = yar.gettracks(lastplayed)
+
         curtrack = queue[0]
+        queue = queue[1:]
         info = curtrack[2]
         # dur = curtrack[3]
+        batch = curtrack[4]
         curtrack = curtrack[:2]
-        pl.play(yar, curtrack, info)
+        pl.play(yar, curtrack, info, batch)
+        lastplayed = curtrack
     yar.save_cookies()
 
 if __name__ == "__main__":

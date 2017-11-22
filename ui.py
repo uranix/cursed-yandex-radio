@@ -1,5 +1,7 @@
 import time
 
+import sys
+
 class UserInterface:
     HEADER=0
     TITLE=2
@@ -28,19 +30,25 @@ class UserInterface:
         self.put(UserInterface.ARTIST, 'Artist: ' + info)
     def status(self, info):
         with open('status.log', 'a') as f:
+            if sys.version_info[0] < 3: info = info.encode('utf-8')
             f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.STATUS, 'Status: ' + info)
     def feedback(self, info):
         with open('feedback.log', 'a') as f:
+            if sys.version_info[0] < 3: info = info.encode('utf-8')
             f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.FEEDBACK, 'Feedback status: ' + info)
     def error(self, info):
         with open('error.log', 'a') as f:
+            if sys.version_info[0] < 3: info = info.encode('utf-8')
             f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.ERRORS, 'Error: ' + info)
     def put(self, line, info):
         my, mx = self.wnd.getmaxyx()
         strlen = len(info)
         pad = mx - strlen
-        padl = pad / 2
-        self.wnd.addstr(line, 0, ' '*padl + info.encode('utf-8') + ' '*(pad - padl))
+        padl = pad // 2
+
+        if sys.version_info[0] < 3: info = info.encode('utf-8')
+
+        self.wnd.addstr(line, 0, ' '*padl + info + ' '*(pad - padl))
