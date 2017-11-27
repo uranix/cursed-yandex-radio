@@ -43,7 +43,8 @@ class Player:
         bus = self.player.get_bus()
         reason = 'trackFinished'
         while True:
-            msg = bus.poll(gst.MessageType.ANY, 100)
+            msg = bus.timed_pop_filtered(100 * gst.MSECOND,
+                    gst.MessageType.ERROR | gst.MessageType.EOS)
             key = yar.ui.poll()
 
             if self.terminate:
