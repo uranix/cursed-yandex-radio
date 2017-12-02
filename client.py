@@ -2,10 +2,41 @@ import pickle
 import requests
 import json
 import time
+import sys
 import hashlib
+
+class Logger:
+    def __init__(self):
+        self.DEBUG = True
+        self.STATUS = True
+        self.FEEDBACK = True
+        self.ERROR = True
+    def timestamp(self):
+        return time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime())
+    def debug(self, info):
+        if self.DEBUG:
+            with open('debug.log', 'a') as f:
+                if sys.version_info[0] < 3: info = info.encode('utf-8')
+                f.write(self.timestamp() + info + '\n')
+    def status(self, info):
+        if self.STATUS:
+            with open('status.log', 'a') as f:
+                if sys.version_info[0] < 3: info = info.encode('utf-8')
+                f.write(self.timestamp() + info + '\n')
+    def feedback(self, info):
+        if self.FEEDBACK:
+            with open('feedback.log', 'a') as f:
+                if sys.version_info[0] < 3: info = info.encode('utf-8')
+                f.write(self.timestamp() + info + '\n')
+    def error(self, info):
+        if self.ERROR:
+            with open('error.log', 'a') as f:
+                if sys.version_info[0] < 3: info = info.encode('utf-8')
+                f.write(self.timestamp() + info + '\n')
 
 class YandexRadio:
     def __init__(self, tag, ui):
+        self.log = Logger()
         self.api = 'https://radio.yandex.ru/api/v2.1/handlers/'
         self.cookies_file = 'cookies.dat'
         self.ui = ui
@@ -71,9 +102,10 @@ class YandexRadio:
                 headers = self.make_headers(headers, get=True)
             )
 
-        self.ui.status('Auth ' + str(resp.status_code))
+        self.ui.status('Auth')
+        self.log.debug('Auth ' + str(resp.status_code))
         if (resp.status_code != 200):
-            self.ui.error('Auth failed')
+            self.log.error('Auth failed: ' + resp.text)
         else:
             authdata = json.loads(resp.text)
             self.sign = authdata['csrf']

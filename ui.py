@@ -1,5 +1,3 @@
-import time
-
 import sys
 
 class UserInterface:
@@ -29,19 +27,10 @@ class UserInterface:
     def artist(self, info):
         self.put(UserInterface.ARTIST, 'Artist: ' + info)
     def status(self, info):
-        with open('status.log', 'a') as f:
-            if sys.version_info[0] < 3: info = info.encode('utf-8')
-            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.STATUS, 'Status: ' + info)
     def feedback(self, info):
-        with open('feedback.log', 'a') as f:
-            if sys.version_info[0] < 3: info = info.encode('utf-8')
-            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.FEEDBACK, 'Feedback status: ' + info)
     def error(self, info):
-        with open('error.log', 'a') as f:
-            if sys.version_info[0] < 3: info = info.encode('utf-8')
-            f.write(time.strftime('[%d %b %Y %H:%M:%S] ', time.localtime()) + info + '\n')
         self.put(UserInterface.ERRORS, 'Error: ' + info)
     def put(self, line, info):
         my, mx = self.wnd.getmaxyx()
